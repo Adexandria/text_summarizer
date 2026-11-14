@@ -1,0 +1,11 @@
+accelerate
+datasets
+evaluate
+fastapi
+peft
+python-dotenv
+rouge-score
+sentencepiece
+torch
+transformers
+tqdm
