@@ -3,18 +3,21 @@ from pathlib import Path
 import torch
 from transformers import T5ForConditionalGeneration, AutoTokenizer
 
-model_path = Path(__file__).resolve().parents[2] / "models" / "t5_small"
+def load_model(model_name: str = "t5_small"):
+    model_path = Path(__file__).resolve().parents[2] / "models" / model_name
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-
-tokenizer = AutoTokenizer.from_pretrained(model_path)
-
-model = T5ForConditionalGeneration.from_pretrained(model_path).to(device)
-
-model.eval()
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
+    model = T5ForConditionalGeneration.from_pretrained(model_path).to(device)
+    model.eval()
+    
+    return model, tokenizer, device
 
 
-def predict(input_text: str) -> str:
+
+def predict(model_name: str ,input_text: str) -> str:
+    model, tokenizer, device = load_model(model_name)
+    
     # Tokenize the input text
     prompt = "summarize: " + input_text
     encoded = tokenizer(
